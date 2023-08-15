@@ -1,9 +1,20 @@
-import React, { useContext, useState, useEffect } from 'react';
-import { authState } from '../store/authState.js';
+import {useState, useEffect } from 'react';
+import { authState } from '../store/authState';
 import {useRecoilValue} from "recoil";
+import { useNavigate } from 'react-router-dom';
+
+interface Todo {
+    _id : string,
+    title:string,
+    description:string,
+    done:boolean
+}
 
 const TodoList = () => {
-    const [todos, setTodos] = useState([]);
+
+    const navigate = useNavigate();
+
+    const [todos, setTodos] = useState<Todo[]>([]);
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
     const authStateValue = useRecoilValue(authState);
@@ -18,7 +29,7 @@ const TodoList = () => {
             setTodos(data);
         };
         getTodos();
-    }, [authState.token]);
+    }, []);
 
     const addTodo = async () => {
         const response = await fetch('http://localhost:3000/todo/todos', {
@@ -30,7 +41,7 @@ const TodoList = () => {
         setTodos([...todos, data]);
     };
 
-    const markDone = async (id) => {
+    const markDone = async (id: string) => {
         const response = await fetch(`http://localhost:3000/todo/todos/${id}/done`, {
             method: 'PATCH',
             headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
@@ -46,7 +57,7 @@ const TodoList = () => {
                 <div style={{marginTop: 25, marginLeft: 20}}>
                     <button onClick={() => {
                         localStorage.removeItem("token");
-                        window.location = "/login";
+                        navigate("/login")
                     }}>Logout</button>
                 </div>
             </div>

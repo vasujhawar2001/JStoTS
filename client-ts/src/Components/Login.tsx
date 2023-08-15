@@ -1,7 +1,9 @@
-import React, { useState } from 'react';
-import {Link} from 'react-router-dom';
+import { useState } from 'react';
+import {Link, useNavigate} from 'react-router-dom';
 
 const Login = () => {
+
+    const navigate = useNavigate();
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
 
@@ -15,7 +17,7 @@ const Login = () => {
         const data = await response.json();
         if (data.token) {
             localStorage.setItem("token", data.token)
-            window.location = "/todos";
+            navigate("/todos")
         } else {
             alert("invalid credentials");
         }
