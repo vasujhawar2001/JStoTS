@@ -10,14 +10,11 @@ interface Todo {
     done:boolean
 }
 
-const TodoList = () => {
-
-    const navigate = useNavigate();
+//CUSTOM FETCH HOOKS
+function useTodos(){
 
     const [todos, setTodos] = useState<Todo[]>([]);
-    const [title, setTitle] = useState('');
-    const [description, setDescription] = useState('');
-    const authStateValue = useRecoilValue(authState);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const getTodos = async () => {
@@ -27,9 +24,26 @@ const TodoList = () => {
             // Todo: Create a type for the response that you get back from the server
             const data = await response.json();
             setTodos(data);
+            setLoading(false);
         };
         getTodos();
     }, []);
+    
+    return {
+        loading,
+        todos : todos,
+        setTodos : setTodos
+    }
+}
+
+const TodoList = () => {
+
+    const navigate = useNavigate();
+    const [title, setTitle] = useState('');
+    const [description, setDescription] = useState('');
+    const authStateValue = useRecoilValue(authState);
+    const {loading, todos, setTodos} = useTodos();
+
 
     const addTodo = async () => {
         const response = await fetch('http://localhost:3000/todo/todos', {
@@ -65,7 +79,8 @@ const TodoList = () => {
             <input type='text' value={title} onChange={(e) => setTitle(e.target.value)} placeholder='Title' />
             <input type='text' value={description} onChange={(e) => setDescription(e.target.value)} placeholder='Description' />
             <button onClick={addTodo}>Add Todo</button>
-            {todos.map((todo) => (
+            {loading && <h3>:p :p :p :p :p :p :p :p :p :p :p :p :p :p :p :p :p :p :p :p :p :p :p :p :p :p :p :p :p :p</h3>}
+            {!loading && todos.map((todo) => (
                 <div key={todo._id}>
                     <h3>{todo.title}</h3>
                     <p>{todo.description}</p>
