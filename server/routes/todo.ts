@@ -1,9 +1,17 @@
 import express from 'express';
 import authenticateJwt from "../middleware/index";
 import { Todo } from "../db/index";
+import {z} from "zod";
 const router = express.Router();
 
-router.post('/todos', authenticateJwt, (req, res) => {
+let todoInput = z.object({
+  title : z.string().min(4).max(20),
+  description : z.string().min(6).max(40),
+  done : z.boolean(),
+  id : z.number()
+})
+
+router.post('/todos', authenticateJwt, (req, res) => { 
   const { title, description } = req.body;
   const done = false;
   const userId = req.headers["userId"];
