@@ -37,7 +37,7 @@ const router = express.Router();
   });
   
   router.post('/login', async (req, res) => {
-    const parsedInput = authInputProps.safeParse(req.body);
+    const parsedInput = signupInput.safeParse(req.body);
     //const { username, password } = req.body;
     if(!parsedInput.success){
       return res.status(411).json({
