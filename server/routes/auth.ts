@@ -3,17 +3,19 @@ import authenticateJwt from "../middleware/index";
 import {SECRET} from '../config';
 import jwt, { VerifyCallback, Secret } from 'jsonwebtoken';
 import {User} from "../db/index";
-import {z} from "zod";
+// import {z} from "zod";
+
+import { signupInput } from '@vasujhawar2001/common';
 
 const router = express.Router();
 
-let authInputProps = z.object({
-  username : z.string().min(6).max(60),
-  password : z.string().min(6).max(30)
-})
+// let authInputProps = z.object({
+//   username : z.string().min(6).max(60),
+//   password : z.string().min(6).max(30)
+// })
 
   router.post('/signup', async (req, res) => {
-    const parsedInput = authInputProps.safeParse(req.body);
+    const parsedInput = signupInput.safeParse(req.body);
     //const { username, password } = req.body;
     if(!parsedInput.success){
       return res.status(411).json({
